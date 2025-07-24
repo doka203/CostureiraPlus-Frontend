@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PedidoService } from '../../services/pedido.service';
+import { LembreteService } from '../../services/lembrete.service';
 import { Pedido } from '../../models/pedido';
 import { Lembrete } from '../../models/lembrete';
 import { Pagamento } from '../../models/pagamento';
+import { PagamentoService } from '../../services/pagamento.service';
 
 @Component({
   selector: 'app-detalhes-pedido',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe, CurrencyPipe],
+  imports: [CommonModule, RouterModule, DatePipe, CurrencyPipe, ReactiveFormsModule],
   templateUrl: './detalhes-pedido.component.html',
   styleUrls: ['./detalhes-pedido.component.css']
 })
@@ -18,11 +21,22 @@ export class DetalhesPedidoComponent implements OnInit {
   lembretes: Lembrete[] = [];
   pagamentos: Pagamento[] = [];
   pedidoId: number = 0;
+  lembreteForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
-    private pedidoService: PedidoService
-  ) { }
+    private pedidoService: PedidoService,
+    private lembreteService: LembreteService,
+    private pagamentoService: PagamentoService,
+    private fb: FormBuilder
+  ) {
+    this.lembreteForm = this.fb.group({
+      descricao: ['', Validators.required],
+      data: ['', Validators.required],
+      hora: ['', Validators.required],
+      status: ['PENDENTE', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     // Captura o ID da rota
@@ -39,14 +53,54 @@ export class DetalhesPedidoComponent implements OnInit {
       this.pedido = pedido;
     });
 
-    // Busca os lembretes associados
+    this.carregarLembretes();
+    this.carregarPagamentos();
+  }
+
+   carregarLembretes(): void {
     this.pedidoService.getLembretesPorPedido(this.pedidoId).subscribe(lembretes => {
       this.lembretes = lembretes;
     });
+  }
 
-    // Busca os pagamentos associados
+  onSubmitLembrete(): void {
+    if (this.lembreteForm.invalid) {
+      return;
+    }
+
+    const novoLembrete: Lembrete = {
+      ...this.lembreteForm.value,
+      idPedido: this.pedidoId
+    };
+
+    this.lembreteService.salvar(novoLembrete).subscribe(() => {
+      alert('Lembrete adicionado com sucesso!');
+      this.lembreteForm.reset({ status: 'PENDENTE' }); // Limpa o formulário
+      this.carregarLembretes(); // Recarrega a lista
+    });
+  }
+
+  excluirLembrete(id: number): void {
+    if (confirm('Tem certeza que deseja excluir este lembrete?')) {
+      this.lembreteService.excluir(id).subscribe(() => {
+        alert('Lembrete excluído com sucesso!');
+        this.carregarLembretes();
+      });
+    }
+  }
+
+  carregarPagamentos(): void {
     this.pedidoService.getPagamentosPorPedido(this.pedidoId).subscribe(pagamentos => {
       this.pagamentos = pagamentos;
+    });
+  }
+
+  registrarPagamento(idPagamento: number): void {
+    const hoje = new Date().toISOString().split('T')[0]; // Pega a data de hoje no formato 'yyyy-MM-dd'
+
+    this.pagamentoService.registrarPagamento(idPagamento, hoje).subscribe(() => {
+      alert('Pagamento registrado com sucesso!');
+      this.carregarPagamentos();
     });
   }
 }

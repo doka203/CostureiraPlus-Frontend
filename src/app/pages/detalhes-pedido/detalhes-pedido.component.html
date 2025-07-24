@@ -1,15 +1,66 @@
 <div class="container mt-4" *ngIf="pedido">
   <h2>Detalhes do Pedido: {{ pedido.descricao }}</h2>
-  <hr>
+  <hr />
 
   <h4>Dados Gerais</h4>
   <p><strong>Cliente:</strong> {{ pedido.nomeCliente }}</p>
   <p><strong>Status:</strong> {{ pedido.status }}</p>
-  <p><strong>Valor Total:</strong> {{ pedido.valor | currency:'BRL' }}</p>
-  <p><strong>Data do Pedido:</strong> {{ pedido.data_pedido | date:'dd/MM/yyyy' }}</p>
-  <p><strong>Data da Entrega:</strong> {{ pedido.data_entrega | date:'dd/MM/yyyy' }}</p>
+  <p><strong>Valor Total:</strong> {{ pedido.valor | currency : "BRL" }}</p>
+  <p>
+    <strong>Data do Pedido:</strong>
+    {{ pedido.data_pedido | date : "dd/MM/yyyy" }}
+  </p>
+  <p>
+    <strong>Data da Entrega:</strong>
+    {{ pedido.data_entrega | date : "dd/MM/yyyy" }}
+  </p>
 
   <h4 class="mt-4">Lembretes</h4>
+
+  <form
+    [formGroup]="lembreteForm"
+    (ngSubmit)="onSubmitLembrete()"
+    class="mb-4 p-3 border rounded"
+  >
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label for="lembrete-descricao" class="form-label">Descrição</label>
+        <input
+          type="text"
+          id="lembrete-descricao"
+          class="form-control"
+          formControlName="descricao"
+        />
+      </div>
+      <div class="col-md-3">
+        <label for="lembrete-data" class="form-label">Data</label>
+        <input
+          type="date"
+          id="lembrete-data"
+          class="form-control"
+          formControlName="data"
+        />
+      </div>
+      <div class="col-md-3">
+        <label for="lembrete-hora" class="form-label">Hora</label>
+        <input
+          type="time"
+          id="lembrete-hora"
+          class="form-control"
+          formControlName="hora"
+        />
+      </div>
+      <div class="col-auto">
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="lembreteForm.invalid"
+        >
+          Adicionar
+        </button>
+      </div>
+    </div>
+  </form>
   <table class="table table-sm table-striped">
     <thead class="table-light">
       <tr>
@@ -17,17 +68,28 @@
         <th>Data</th>
         <th>Hora</th>
         <th>Status</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let lembrete of lembretes">
         <td>{{ lembrete.descricao }}</td>
-        <td>{{ lembrete.data | date:'dd/MM/yyyy' }}</td>
+        <td>{{ lembrete.data | date : "dd/MM/yyyy" }}</td>
         <td>{{ lembrete.hora }}</td>
         <td>{{ lembrete.status }}</td>
+        <td>
+          <button
+            class="btn btn-sm btn-outline-danger"
+            (click)="excluirLembrete(lembrete.id)"
+          >
+            Excluir
+          </button>
+        </td>
       </tr>
       <tr *ngIf="lembretes.length === 0">
-        <td colspan="4" class="text-center">Nenhum lembrete para este pedido.</td>
+        <td colspan="5" class="text-center">
+          Nenhum lembrete para este pedido.
+        </td>
       </tr>
     </tbody>
   </table>
@@ -39,19 +101,39 @@
         <th>Valor da Parcela</th>
         <th>Data de Vencimento</th>
         <th>Data de Pagamento</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let pagamento of pagamentos">
-        <td>{{ pagamento.valor | currency:'BRL' }}</td>
-        <td>{{ pagamento.data_vencimento | date:'dd/MM/yyyy' }}</td>
-        <td>{{ pagamento.data_pagamento ? (pagamento.data_pagamento | date:'dd/MM/yyyy') : 'Pendente' }}</td>
+        <td>{{ pagamento.valor | currency : "BRL" }}</td>
+        <td>{{ pagamento.data_vencimento | date : "dd/MM/yyyy" }}</td>
+        <td>
+          {{
+            pagamento.data_pagamento
+              ? (pagamento.data_pagamento | date : "dd/MM/yyyy")
+              : "Pendente"
+          }}
+        </td>
+        <td>
+          <button
+            *ngIf="!pagamento.data_pagamento"
+            class="btn btn-sm btn-success"
+            (click)="registrarPagamento(pagamento.id)"
+          >
+            Registar Pagamento
+          </button>
+        </td>
       </tr>
-       <tr *ngIf="pagamentos.length === 0">
-        <td colspan="3" class="text-center">Nenhum pagamento registrado para este pedido.</td>
+      <tr *ngIf="pagamentos.length === 0">
+        <td colspan="4" class="text-center">
+          Nenhum pagamento registado para este pedido.
+        </td>
       </tr>
     </tbody>
   </table>
 
-  <button class="btn btn-secondary mt-3" routerLink="/consultar-pedidos">Voltar para a Lista</button>
+  <button class="btn btn-secondary mt-3" routerLink="/consultar-pedidos">
+    Voltar para a Lista
+  </button>
 </div>
