@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pedido } from '../models/pedido';
+import { Lembrete } from '../models/lembrete';
+import { Pagamento } from '../models/pagamento';
+
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +35,13 @@ export class PedidoService {
 
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getLembretesPorPedido(idPedido: number): Observable<Lembrete[]> {
+    return this.http.get<Lembrete[]>(`${this.apiUrl}/${idPedido}/lembretes`);
+  }
+
+  getPagamentosPorPedido(idPedido: number): Observable<Pagamento[]> {
+    return this.http.get<Pagamento[]>(`${this.apiUrl}/${idPedido}/pagamentos`);
   }
 }

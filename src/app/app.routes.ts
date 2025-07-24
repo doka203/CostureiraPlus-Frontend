@@ -5,6 +5,7 @@ import { CadastrarPessoaComponent } from './pages/cadastrar-pessoa/cadastrar-pes
 import { ConsultarPessoasComponent } from './pages/consultar-pessoas/consultar-pessoas.component';
 import { ConsultarPedidosComponent } from './pages/consultar-pedidos/consultar-pedidos.component';
 import { CadastrarPedidoComponent } from './pages/cadastrar-pedido/cadastrar-pedido.component';
+import { DetalhesPedidoComponent } from './pages/detalhes-pedido/detalhes-pedido.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './core/auth.guard';
 
@@ -13,7 +14,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
-  
+
   // Rotas de Pessoas
   { path: 'cadastrar', component: CadastrarPessoaComponent, canActivate: [authGuard] },
   { path: 'cadastrar/:id', component: CadastrarPessoaComponent, canActivate: [authGuard] },
@@ -22,5 +23,6 @@ export const routes: Routes = [
   // Rotas de Pedidos
   { path: 'cadastrar-pedido', component: CadastrarPedidoComponent, canActivate: [authGuard] },
   { path: 'cadastrar-pedido/:id', component: CadastrarPedidoComponent, canActivate: [authGuard] },
-  { path: 'consultar-pedidos', component: ConsultarPedidosComponent, canActivate: [authGuard] }
+  { path: 'consultar-pedidos', component: ConsultarPedidosComponent, canActivate: [authGuard] },
+  { path: 'detalhes-pedido/:id', component: DetalhesPedidoComponent, canActivate: [authGuard] }
 ];
