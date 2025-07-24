@@ -1,0 +1,25 @@
+<h2>Pessoas Cadastradas</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>CPF</th>
+      <th>Endereco</th>
+      <th>Telefone</th>
+      <th>Email</th> 
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pessoa of Pessoas">
+      <td>{{ pessoa.nome }}</td>
+      <td>{{ pessoa.cpf }}</td>
+      <td>{{ pessoa.endereco }}</td>
+      <td>{{ pessoa.telefone }}</td>
+      <td>{{ pessoa.email }}</td>
+      <td>
+        <button (click)="editarPessoa(pessoa)">Editar</button>
+        <button (click)="excluirPessoa(pessoa.id!)">Excluir</button>
+      </td>      
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,9 @@
+<h2>Cadastrar Pessoa</h2>
+<form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+  <label>Nome: <input formControlName="nome"></label><br />
+  <label>CPF: <input formControlName="cpf"></label><br />
+  <label>Endereco: <input formControlName="endereco"></label><br />
+  <label>Telefone: <input formControlName="telefone"></label><br />
+  <label>Email: <input formControlName="email"></label><br />
+  <button type="submit" [disabled]="formulario.invalid">Cadastrar</button>
+</form>
