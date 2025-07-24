@@ -1,8 +1,10 @@
-<header *ngIf="loginService.isLoggedIn()">
+<header *ngIf="loginService.isLoggedIn()" class="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
   <h1>{{ title }}</h1>
   <nav>
-    </nav>
-  <button (click)="onLogout()">Sair</button>
+    <a class="btn btn-outline-light me-2" routerLink="/consultar">Pessoas</a>
+    <a class="btn btn-outline-light" routerLink="/consultar-pedidos">Pedidos</a>
+  </nav>
+  <button class="btn btn-danger" (click)="onLogout()">Sair</button>
 </header>
 
 <main>
