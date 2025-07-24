@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pessoa } from '../models/pessoa';
 
@@ -13,8 +13,11 @@ export class PessoaService {
   constructor(private http: HttpClient) { }
 
   listar(): Observable<Pessoa[]> {
-
     return this.http.get<Pessoa[]>(this.apiUrl);
+  }
+
+  buscarPorId(id: number): Observable<Pessoa> {
+    return this.http.get<Pessoa>(`${this.apiUrl}/${id}`);
   }
 
   salvar(pessoa: Pessoa): Observable<Pessoa> {
@@ -25,12 +28,7 @@ export class PessoaService {
     }
   }
 
-  buscarPorId(id: number) {
-    return this.http.get(`${this.apiUrl}/${id}`);
-  }
-  
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
 }

@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PessoaService } from '../../services/pessoa.service';
 import { Pessoa } from '../../models/pessoa';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-consultar-pessoas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './consultar-pessoas.component.html',
-  styleUrl: './consultar-pessoas.component.css'
+  styleUrls: ['./consultar-pessoas.component.css']
 })
-export class ConsultarPessoasComponent {
-  Pessoas: Pessoa[] = [];
+export class ConsultarPessoasComponent implements OnInit {
+  pessoas: Pessoa[] = [];
 
   constructor(private pessoaService: PessoaService, private router: Router) { }
 
@@ -20,8 +20,14 @@ export class ConsultarPessoasComponent {
     this.carregarPessoas();
   }
 
-  editarPessoa(Pessoas: Pessoa): void {
-    this.router.navigate(['/cadastrar', Pessoas.id]);
+  carregarPessoas(): void {
+    this.pessoaService.listar().subscribe(pessoas => {
+      this.pessoas = pessoas;
+    });
+  }
+
+  editarPessoa(pessoa: Pessoa): void {
+    this.router.navigate(['/cadastrar', pessoa.id]);
   }
 
   excluirPessoa(id: number): void {
@@ -31,11 +37,5 @@ export class ConsultarPessoasComponent {
         this.carregarPessoas();
       });
     }
-  }
-
-  carregarPessoas(): void {
-    this.pessoaService.listar().subscribe(pessoa => {
-      this.Pessoas = pessoa;
-    });
   }
 }

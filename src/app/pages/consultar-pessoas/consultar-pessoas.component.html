@@ -4,13 +4,14 @@
     <tr>
       <th>Nome</th>
       <th>CPF</th>
-      <th>Endereco</th>
+      <th>Endereço</th>
       <th>Telefone</th>
-      <th>Email</th> 
+      <th>Email</th>
+      <th>Ações</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let pessoa of Pessoas">
+    <tr *ngFor="let pessoa of pessoas">
       <td>{{ pessoa.nome }}</td>
       <td>{{ pessoa.cpf }}</td>
       <td>{{ pessoa.endereco }}</td>
@@ -19,7 +20,7 @@
       <td>
         <button (click)="editarPessoa(pessoa)">Editar</button>
         <button (click)="excluirPessoa(pessoa.id!)">Excluir</button>
-      </td>      
+      </td>
     </tr>
   </tbody>
 </table>
