@@ -1,26 +1,39 @@
-<h2>Pessoas Cadastradas</h2>
-<table border="1" cellpadding="8" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>CPF</th>
-      <th>Endereço</th>
-      <th>Telefone</th>
-      <th>Email</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let pessoa of pessoas">
-      <td>{{ pessoa.nome }}</td>
-      <td>{{ pessoa.cpf }}</td>
-      <td>{{ pessoa.endereco }}</td>
-      <td>{{ pessoa.telefone }}</td>
-      <td>{{ pessoa.email }}</td>
-      <td>
-        <button (click)="editarPessoa(pessoa)">Editar</button>
-        <button (click)="excluirPessoa(pessoa.id!)">Excluir</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Gestão de Pessoas</h2>
+    <button class="btn btn-primary" routerLink="/cadastrar">
+      <i class="bi bi-plus-circle me-2"></i> Adicionar Pessoa
+    </button>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pessoa of pessoas">
+            <td>{{ pessoa.nome }}</td>
+            <td>{{ pessoa.cpf }}</td>
+            <td>{{ pessoa.email }}</td>
+            <td>{{ pessoa.telefone }}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary me-2" (click)="editarPessoa(pessoa)">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="excluirPessoa(pessoa.id!)">Excluir</button>
+            </td>
+          </tr>
+          <tr *ngIf="pessoas.length === 0">
+            <td colspan="5" class="text-center text-muted">Nenhuma pessoa cadastrada.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

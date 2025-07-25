@@ -1,14 +1,29 @@
-<header *ngIf="loginService.isLoggedIn()" class="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
-  <h1>{{ title }}</h1>
-  <nav>
-    <a class="btn btn-outline-light me-2" routerLink="/consultar">Pessoas</a>
-    <a class="btn btn-outline-light me-2" routerLink="/consultar-pedidos">Pedidos</a>
-    <a class="btn btn-outline-light me-2" routerLink="/agenda">Agenda</a>
-    <a class="btn btn-outline-light" routerLink="/relatorios">Relatórios</a>
-  </nav>
-  <button class="btn btn-danger" (click)="onLogout()">Sair</button>
-</header>
+<nav *ngIf="loginService.isLoggedIn()" class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">CostureiraPlus</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consultar" routerLinkActive="active">Pessoas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consultar-pedidos" routerLinkActive="active">Pedidos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/agenda" routerLinkActive="active">Agenda</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/relatorios" routerLinkActive="active">Relatórios</a>
+        </li>
+      </ul>
+      <button class="btn btn-outline-danger" (click)="onLogout()">Sair</button>
+    </div>
+  </div>
+</nav>
 
-<main>
+<main class="container mt-4">
   <router-outlet></router-outlet>
 </main>
