@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { VisitaService } from '../../services/visita.service';
@@ -20,33 +20,35 @@ export class AgendaComponent implements OnInit {
   visitaForm: FormGroup;
   visitas: Visita[] = [];
   clientes: Usuario[] = [];
+  editandoVisitaId: number | null = null; // Controla se estamos a editar
 
   constructor(
     private fb: FormBuilder,
     private visitaService: VisitaService,
     private usuarioService: UsuarioService
   ) {
-    // Formulário para filtrar a agenda por data
+    // Formulário para filtrar a agenda
     const hoje = new Date();
     const proximaSemana = new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000);
-
     this.filtroForm = this.fb.group({
       dataInicio: [hoje.toISOString().split('T')[0], Validators.required],
       dataFim: [proximaSemana.toISOString().split('T')[0], Validators.required]
     });
 
-    // Formulário para adicionar uma nova visita
+    // Formulário para adicionar ou editar uma visita
     this.visitaForm = this.fb.group({
       idUsuarioCliente: [null, Validators.required],
       descricao: ['', Validators.required],
       data: ['', Validators.required],
-      hora: ['', Validators.required]
+      hora: ['', Validators.required],
+      // Campo "escondido" para guardar o ID da costureira durante a edição
+      idUsuarioCostureira: [null]
     });
   }
 
   ngOnInit(): void {
     this.carregarClientes();
-    this.onFiltrar(); // Carrega as visitas para o período inicial
+    this.onFiltrar();
   }
 
   carregarClientes(): void {
@@ -69,10 +71,50 @@ export class AgendaComponent implements OnInit {
       return;
     }
 
-    this.visitaService.salvar(this.visitaForm.value).subscribe(() => {
-      alert('Visita agendada com sucesso!');
-      this.visitaForm.reset();
-      this.onFiltrar(); // Atualiza a lista de visitas
+    const visitaParaSalvar: Visita = {
+      id: this.editandoVisitaId ?? undefined,
+      ...this.visitaForm.value
+    };
+
+    this.visitaService.salvar(visitaParaSalvar).subscribe({
+      next: () => {
+        alert(`Visita ${this.editandoVisitaId ? 'atualizada' : 'agendada'} com sucesso!`);
+        this.cancelarEdicao();
+        this.onFiltrar(); // Atualiza a lista para mostrar a nova visita ou a alteração
+      },
+      error: (err) => {
+        console.error('Erro ao salvar visita:', err);
+        alert(err.error?.message || 'Não foi possível salvar a visita.');
+      }
     });
+  }
+
+  editarVisita(visita: Visita): void {
+    this.editandoVisitaId = visita.id ?? null;
+    this.visitaForm.patchValue({
+      ...visita, // Preenche todos os campos correspondentes, incluindo idUsuarioCostureira
+      data: formatDate(visita.data, 'yyyy-MM-dd', 'en-US') // Formata a data para o input
+    });
+    window.scrollTo(0, 0); // Rola a página para o topo para que o utilizador veja o formulário preenchido
+  }
+
+  cancelarEdicao(): void {
+    this.editandoVisitaId = null;
+    this.visitaForm.reset(); // Limpa o formulário
+  }
+
+  excluirVisita(id: number): void {
+    if (confirm('Tem certeza que deseja excluir esta visita?')) {
+      this.visitaService.excluir(id).subscribe({
+        next: () => {
+          alert('Visita excluída com sucesso!');
+          this.onFiltrar(); // Atualiza a lista
+        },
+        error: (err) => {
+          console.error('Erro ao excluir visita:', err);
+          alert(err.error?.message || 'Não foi possível excluir a visita.');
+        }
+      });
+    }
   }
 }

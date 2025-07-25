@@ -3,7 +3,7 @@
 
   <div class="card shadow-sm mb-4">
     <div class="card-header">
-      <h4>Agendar Nova Visita</h4>
+      <h4>{{ editandoVisitaId ? 'Editar Visita' : 'Agendar Nova Visita' }}</h4>
     </div>
     <div class="card-body">
       <form [formGroup]="visitaForm" (ngSubmit)="onSalvarVisita()">
@@ -28,8 +28,11 @@
             <input type="time" id="visita-hora" class="form-control" formControlName="hora">
           </div>
         </div>
-        <div class="d-flex justify-content-end mt-3">
-          <button type="submit" class="btn btn-success" [disabled]="visitaForm.invalid">Agendar Visita</button>
+        <div class="d-flex justify-content-end mt-3 gap-2">
+          <button *ngIf="editandoVisitaId" type="button" class="btn btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="visitaForm.invalid">
+            {{ editandoVisitaId ? 'Salvar Alterações' : 'Agendar Visita' }}
+          </button>
         </div>
       </form>
     </div>
@@ -51,7 +54,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Filtrar</button>
       </form>
-
       <table class="table table-hover align-middle">
         <thead class="table-light">
           <tr>
@@ -59,7 +61,8 @@
             <th>Hora</th>
             <th>Cliente</th>
             <th>Descrição</th>
-            </tr>
+            <th class="text-center">Ações</th>
+          </tr>
         </thead>
         <tbody>
           <tr *ngFor="let visita of visitas">
@@ -67,9 +70,13 @@
             <td>{{ visita.hora }}</td>
             <td>{{ visita.nomeCliente }}</td>
             <td>{{ visita.descricao }}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary me-2" (click)="editarVisita(visita)">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="excluirVisita(visita.id!)">Excluir</button>
+            </td>
           </tr>
           <tr *ngIf="visitas.length === 0">
-            <td colspan="4" class="text-center text-muted">Nenhuma visita agendada para este período.</td>
+            <td colspan="5" class="text-center text-muted">Nenhuma visita agendada para este período.</td>
           </tr>
         </tbody>
       </table>

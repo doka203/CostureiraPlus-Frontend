@@ -23,8 +23,15 @@ export class VisitaService {
 
   // Salva uma nova visita
   salvar(visita: Visita): Observable<Visita> {
-    // O id da costureira é fixo por enquanto (usuário 'costureira' com ID 1)
-    visita.idUsuarioCostureira = 1;
-    return this.http.post<Visita>(this.apiUrl, visita);
+    if (visita.id) {
+      return this.http.put<Visita>(`${this.apiUrl}/${visita.id}`, visita);
+    } else {
+      visita.idUsuarioCostureira = 1;
+      return this.http.post<Visita>(this.apiUrl, visita);
+    }
+  }
+
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
