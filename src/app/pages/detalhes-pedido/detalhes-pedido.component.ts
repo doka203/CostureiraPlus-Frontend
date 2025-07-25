@@ -96,11 +96,17 @@ export class DetalhesPedidoComponent implements OnInit {
   }
 
   registrarPagamento(idPagamento: number): void {
-    const hoje = new Date().toISOString().split('T')[0]; // Pega a data de hoje no formato 'yyyy-MM-dd'
+    const hoje = new Date().toISOString().split('T')[0];
 
-    this.pagamentoService.registrarPagamento(idPagamento, hoje).subscribe(() => {
-      alert('Pagamento registrado com sucesso!');
-      this.carregarPagamentos();
+    this.pagamentoService.registrarPagamento(idPagamento, hoje).subscribe({
+      next: () => {
+        alert('Pagamento registrado com sucesso!');
+        this.carregarPagamentos();
+      },
+      error: (err) => {
+        console.error('Erro ao registrar pagamento:', err);
+        alert(err.error?.message || 'Não foi possível registrar o pagamento.');
+      }
     });
   }
 }

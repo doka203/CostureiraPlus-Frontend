@@ -12,10 +12,12 @@ export class PagamentoService {
 
   constructor(private http: HttpClient) { }
 
+  listarTodos(): Observable<Pagamento[]> {
+    return this.http.get<Pagamento[]>(this.apiUrl);
+  }
+
   registrarPagamento(id: number, dataPagamento: string): Observable<Pagamento> {
-    // O endpoint espera receber a data diretamente no corpo da requisição
-    return this.http.put<Pagamento>(`${this.apiUrl}/${id}/registrar-pagamento`, dataPagamento, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const body = { dataPagamento: dataPagamento };
+    return this.http.put<Pagamento>(`${this.apiUrl}/${id}/registrar-pagamento`, body);
   }
 }

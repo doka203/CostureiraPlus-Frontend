@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { PedidoService } from '../../services/pedido.service';
 import { UsuarioService } from '../../services/usuario.service';
-import { Pedido } from '../../models/pedido';
+import { PedidoService } from '../../services/pedido.service';
+import { PagamentoService } from '../../services/pagamento.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -21,24 +21,30 @@ export class RelatoriosComponent implements OnInit {
 
   constructor(
     private usuarioService: UsuarioService,
-    private pedidoService: PedidoService
+    private pedidoService: PedidoService,
+    private pagamentoService: PagamentoService
   ) { }
 
   ngOnInit(): void {
     forkJoin({
       clientes: this.usuarioService.listarClientes(),
-      pedidos: this.pedidoService.listar()
-    }).subscribe(({ clientes, pedidos }) => {
+      pedidos: this.pedidoService.listar(),
+      pagamentos: this.pagamentoService.listarTodos()
+    }).subscribe(({ clientes, pedidos, pagamentos }) => {
       this.totalClientes = clientes.length;
       this.totalPedidos = pedidos.length;
 
-      this.valorTotalRecebido = pedidos
-        .filter(p => p.status === 'FINALIZADO')
-        .reduce((acc, pedido) => acc + pedido.valor, 0);
+      this.valorTotalRecebido = pagamentos
+        .filter(p => p.data_pagamento != null) // Filtra apenas as parcelas que foram pagas
+        .reduce((acc, pagamento) => acc + pagamento.valor, 0);
 
-      this.valorTotalReceber = pedidos
-        .filter(p => p.status === 'EM ANDAMENTO')
-        .reduce((acc, pedido) => acc + pedido.valor, 0);
+      this.valorTotalReceber = pagamentos
+        .filter(p => p.data_pagamento == null) // Filtra apenas as parcelas pendentes
+        .reduce((acc, pagamento) => acc + pagamento.valor, 0);
+
+        // this.valorTotalReceber = pedidos
+        // .filter(p => p.status === 'EM ANDAMENTO')
+        // .reduce((acc, pedido) => acc + pedido.valor, 0);
     });
   }
 }
