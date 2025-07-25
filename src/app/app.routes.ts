@@ -7,6 +7,7 @@ import { ConsultarPedidosComponent } from './pages/consultar-pedidos/consultar-p
 import { CadastrarPedidoComponent } from './pages/cadastrar-pedido/cadastrar-pedido.component';
 import { DetalhesPedidoComponent } from './pages/detalhes-pedido/detalhes-pedido.component';
 import { LoginComponent } from './pages/login/login.component';
+import { AgendaComponent } from './pages/agenda/agenda.component';
 import { authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
@@ -24,5 +25,7 @@ export const routes: Routes = [
   { path: 'cadastrar-pedido', component: CadastrarPedidoComponent, canActivate: [authGuard] },
   { path: 'cadastrar-pedido/:id', component: CadastrarPedidoComponent, canActivate: [authGuard] },
   { path: 'consultar-pedidos', component: ConsultarPedidosComponent, canActivate: [authGuard] },
-  { path: 'detalhes-pedido/:id', component: DetalhesPedidoComponent, canActivate: [authGuard] }
+  { path: 'detalhes-pedido/:id', component: DetalhesPedidoComponent, canActivate: [authGuard] },
+
+   { path: 'agenda', component: AgendaComponent, canActivate: [authGuard] },
 ];

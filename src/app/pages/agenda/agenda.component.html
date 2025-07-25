@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <h2>Agenda de Visitas</h2>
+  <hr>
+
+  <h4>Agendar Nova Visita</h4>
+  <form [formGroup]="visitaForm" (ngSubmit)="onSalvarVisita()" class="p-3 border rounded mb-4">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="visita-cliente" class="form-label">Cliente</label>
+        <select id="visita-cliente" class="form-select" formControlName="idUsuarioCliente">
+          <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nome }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="visita-descricao" class="form-label">Descrição</label>
+        <input type="text" id="visita-descricao" class="form-control" formControlName="descricao">
+      </div>
+      <div class="col-md-4">
+        <label for="visita-data" class="form-label">Data</label>
+        <input type="date" id="visita-data" class="form-control" formControlName="data">
+      </div>
+      <div class="col-md-4">
+        <label for="visita-hora" class="form-label">Hora</label>
+        <input type="time" id="visita-hora" class="form-control" formControlName="hora">
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-success w-100" [disabled]="visitaForm.invalid">Agendar</button>
+      </div>
+    </div>
+  </form>
+
+  <h4>Visitas Agendadas</h4>
+  <form [formGroup]="filtroForm" (ngSubmit)="onFiltrar()" class="d-flex align-items-end gap-3 mb-3">
+    <div>
+      <label for="filtro-inicio" class="form-label">De:</label>
+      <input type="date" id="filtro-inicio" class="form-control" formControlName="dataInicio">
+    </div>
+    <div>
+      <label for="filtro-fim" class="form-label">Até:</label>
+      <input type="date" id="filtro-fim" class="form-control" formControlName="dataFim">
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+  </form>
+
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>Data</th>
+        <th>Hora</th>
+        <th>Cliente</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let visita of visitas">
+        <td>{{ visita.data | date:'dd/MM/yyyy' }}</td>
+        <td>{{ visita.hora }}</td>
+        <td>{{ visita.nomeCliente }}</td>
+        <td>{{ visita.descricao }}</td>
+      </tr>
+      <tr *ngIf="visitas.length === 0">
+        <td colspan="4" class="text-center">Nenhuma visita agendada para este período.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
