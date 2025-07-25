@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PedidoService } from '../../services/pedido.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/usuario';
-import { formatDate } from '@angular/common';
-
 
 @Component({
   selector: 'app-cadastrar-pedido',
@@ -36,7 +34,9 @@ export class CadastrarPedidoComponent implements OnInit {
       valor: [0, [Validators.required, Validators.min(0.01)]],
       forma_pagamento: ['', Validators.required],
       numero_parcelas: [1, [Validators.required, Validators.min(1)]],
-      idUsuarioCliente: [null, Validators.required]
+      idUsuarioCliente: [null, Validators.required],
+      // 1. Adicionar este campo para guardar o ID da costureira durante a edição
+      idUsuarioCostureira: [null]
     });
   }
 
@@ -45,10 +45,12 @@ export class CadastrarPedidoComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.pedidoService.buscarPorId(Number(id)).subscribe(pedido => {
-        // Formata as datas para o formato yyyy-MM-dd antes de preencher o formulário
-        pedido.data_pedido = formatDate(pedido.data_pedido, 'yyyy-MM-dd', 'en-US');
-        pedido.data_entrega = formatDate(pedido.data_entrega, 'yyyy-MM-dd', 'en-US');
-        this.formulario.patchValue(pedido);
+        // O patchValue irá preencher todos os campos, incluindo o novo 'idUsuarioCostureira'
+        this.formulario.patchValue({
+          ...pedido,
+          data_pedido: formatDate(pedido.data_pedido, 'yyyy-MM-dd', 'en-US'),
+          data_entrega: formatDate(pedido.data_entrega, 'yyyy-MM-dd', 'en-US')
+        });
       });
     }
   }
@@ -61,9 +63,16 @@ export class CadastrarPedidoComponent implements OnInit {
 
   onSubmit(): void {
     if (this.formulario.valid) {
-      this.pedidoService.salvar(this.formulario.value).subscribe(() => {
-        alert('Pedido salvo com sucesso!');
-        this.router.navigate(['/consultar-pedidos']);
+      // 2. Adicionar o tratamento de erros ao subscribe
+      this.pedidoService.salvar(this.formulario.value).subscribe({
+        next: () => {
+          alert('Pedido salvo com sucesso!');
+          this.router.navigate(['/consultar-pedidos']);
+        },
+        error: (err) => {
+          console.error('Erro ao salvar pedido:', err);
+          alert(err.error?.message || 'Não foi possível salvar o pedido.');
+        }
       });
     }
   }
