@@ -12,6 +12,10 @@ export class VisitaService {
 
   constructor(private http: HttpClient) { }
 
+  listarTodas(): Observable<Visita[]> {
+    return this.http.get<Visita[]>(this.apiUrl);
+  }
+
   // Busca visitas dentro de um período de datas
   getAgendaPorPeriodo(dataInicio: string, dataFim: string): Observable<Visita[]> {
     const params = new HttpParams()

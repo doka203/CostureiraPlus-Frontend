@@ -20,19 +20,17 @@ export class AgendaComponent implements OnInit {
   visitaForm: FormGroup;
   visitas: Visita[] = [];
   clientes: Usuario[] = [];
-  editandoVisitaId: number | null = null; // Controla se estamos a editar
+  editandoVisitaId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private visitaService: VisitaService,
     private usuarioService: UsuarioService
   ) {
-    // Formulário para filtrar a agenda
-    const hoje = new Date();
-    const proximaSemana = new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000);
+    // Formulário para filtrar a agenda, agora inicializado sem datas
     this.filtroForm = this.fb.group({
-      dataInicio: [hoje.toISOString().split('T')[0], Validators.required],
-      dataFim: [proximaSemana.toISOString().split('T')[0], Validators.required]
+      dataInicio: [null],
+      dataFim: [null]
     });
 
     // Formulário para adicionar ou editar uma visita
@@ -41,14 +39,19 @@ export class AgendaComponent implements OnInit {
       descricao: ['', Validators.required],
       data: ['', Validators.required],
       hora: ['', Validators.required],
-      // Campo "escondido" para guardar o ID da costureira durante a edição
       idUsuarioCostureira: [null]
     });
   }
 
   ngOnInit(): void {
     this.carregarClientes();
-    this.onFiltrar();
+    this.carregarTodasVisitas();
+  }
+
+  carregarTodasVisitas(): void {
+    this.visitaService.listarTodas().subscribe(visitas => {
+      this.visitas = visitas;
+    });
   }
 
   carregarClientes(): void {
@@ -58,12 +61,21 @@ export class AgendaComponent implements OnInit {
   }
 
   onFiltrar(): void {
-    if (this.filtroForm.valid) {
+    // Adiciona uma validação para garantir que as duas datas foram preenchidas
+    if (this.filtroForm.valid && this.filtroForm.value.dataInicio && this.filtroForm.value.dataFim) {
       const { dataInicio, dataFim } = this.filtroForm.value;
       this.visitaService.getAgendaPorPeriodo(dataInicio, dataFim).subscribe(visitas => {
         this.visitas = visitas;
       });
+    } else {
+      alert('Por favor, preencha as duas datas para filtrar.');
     }
+  }
+
+  // Novo método para limpar o filtro e recarregar todas as visitas
+  limparFiltro(): void {
+    this.filtroForm.reset();
+    this.carregarTodasVisitas();
   }
 
   onSalvarVisita(): void {
@@ -80,7 +92,7 @@ export class AgendaComponent implements OnInit {
       next: () => {
         alert(`Visita ${this.editandoVisitaId ? 'atualizada' : 'agendada'} com sucesso!`);
         this.cancelarEdicao();
-        this.onFiltrar(); // Atualiza a lista para mostrar a nova visita ou a alteração
+        this.carregarTodasVisitas();
       },
       error: (err) => {
         console.error('Erro ao salvar visita:', err);
@@ -108,7 +120,7 @@ export class AgendaComponent implements OnInit {
       this.visitaService.excluir(id).subscribe({
         next: () => {
           alert('Visita excluída com sucesso!');
-          this.onFiltrar(); // Atualiza a lista
+          this.carregarTodasVisitas(); // Atualiza a lista
         },
         error: (err) => {
           console.error('Erro ao excluir visita:', err);
