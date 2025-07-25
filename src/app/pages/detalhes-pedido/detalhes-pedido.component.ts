@@ -22,6 +22,7 @@ export class DetalhesPedidoComponent implements OnInit {
   pagamentos: Pagamento[] = [];
   pedidoId: number = 0;
   lembreteForm: FormGroup;
+  editandoLembreteStatusId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -106,6 +107,34 @@ export class DetalhesPedidoComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao registrar pagamento:', err);
         alert(err.error?.message || 'Não foi possível registrar o pagamento.');
+      }
+    });
+  }
+
+  iniciarEdicaoStatus(lembrete: Lembrete): void {
+    if (lembrete.id) {
+      this.editandoLembreteStatusId = lembrete.id;
+    }
+  }
+
+  cancelarEdicaoStatus(): void {
+    this.editandoLembreteStatusId = null;
+  }
+
+  salvarStatusLembrete(lembrete: Lembrete, event: any): void {
+    const novoStatus = (event.target as HTMLSelectElement).value;
+
+    const lembreteAtualizado = { ...lembrete, status: novoStatus };
+
+    this.lembreteService.salvar(lembreteAtualizado).subscribe({
+      next: () => {
+        lembrete.status = novoStatus;
+        this.cancelarEdicaoStatus();
+      },
+      error: (err) => {
+        console.error("Erro ao atualizar status do lembrete", err);
+        alert("Não foi possível atualizar o status.");
+        this.cancelarEdicaoStatus();
       }
     });
   }

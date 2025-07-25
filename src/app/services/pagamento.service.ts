@@ -8,7 +8,7 @@ import { Pagamento } from '../models/pagamento';
 })
 export class PagamentoService {
 
-  private apiUrl = 'http://localhost:8080/pagamentos';
+  private apiUrl = 'https://costureiraplus.onrender.com/pagamentos';
 
   constructor(private http: HttpClient) { }
 

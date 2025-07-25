@@ -11,7 +11,7 @@ import { Token } from '../models/token';
   providedIn: 'root'
 })
 export class LoginService {
-  private readonly apiUrl = 'http://localhost:8080/auth/login';
+  private readonly apiUrl = 'https://costureiraplus.onrender.com/auth/login';
   private readonly TOKEN_KEY = 'authToken';
 
   constructor(private http: HttpClient, private router: Router) { }

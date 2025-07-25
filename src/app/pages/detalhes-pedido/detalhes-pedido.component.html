@@ -1,7 +1,9 @@
 <div class="container mt-4" *ngIf="pedido">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0">Detalhes do Pedido</h2>
-    <button class="btn btn-secondary" routerLink="/consultar-pedidos">Voltar para a Lista</button>
+    <button class="btn btn-secondary" routerLink="/consultar-pedidos">
+      Voltar para a Lista
+    </button>
   </div>
 
   <div class="card shadow-sm mb-4">
@@ -11,10 +13,19 @@
     <div class="card-body">
       <p><strong>Cliente:</strong> {{ pedido.nomeCliente }}</p>
       <p><strong>Descrição:</strong> {{ pedido.descricao }}</p>
-      <p><strong>Status:</strong> <span class="badge bg-primary">{{ pedido.status }}</span></p>
-      <p><strong>Valor Total:</strong> {{ pedido.valor | currency:'BRL' }}</p>
-      <p><strong>Data do Pedido:</strong> {{ pedido.data_pedido | date:'dd/MM/yyyy' }}</p>
-      <p><strong>Data da Entrega:</strong> {{ pedido.data_entrega | date:'dd/MM/yyyy' }}</p>
+      <p>
+        <strong>Status:</strong>
+        <span class="badge bg-primary">{{ pedido.status }}</span>
+      </p>
+      <p><strong>Valor Total:</strong> {{ pedido.valor | currency : "BRL" }}</p>
+      <p>
+        <strong>Data do Pedido:</strong>
+        {{ pedido.data_pedido | date : "dd/MM/yyyy" }}
+      </p>
+      <p>
+        <strong>Data da Entrega:</strong>
+        {{ pedido.data_entrega | date : "dd/MM/yyyy" }}
+      </p>
     </div>
   </div>
 
@@ -23,22 +34,47 @@
       <h4>Lembretes</h4>
     </div>
     <div class="card-body">
-      <form [formGroup]="lembreteForm" (ngSubmit)="onSubmitLembrete()" class="mb-4 p-3 bg-light border rounded">
+      <form
+        [formGroup]="lembreteForm"
+        (ngSubmit)="onSubmitLembrete()"
+        class="mb-4 p-3 bg-light border rounded"
+      >
         <div class="row g-3 align-items-end">
           <div class="col-md-4">
             <label for="lembrete-descricao" class="form-label">Descrição</label>
-            <input type="text" id="lembrete-descricao" class="form-control" formControlName="descricao">
+            <input
+              type="text"
+              id="lembrete-descricao"
+              class="form-control"
+              formControlName="descricao"
+            />
           </div>
           <div class="col-md-3">
             <label for="lembrete-data" class="form-label">Data</label>
-            <input type="date" id="lembrete-data" class="form-control" formControlName="data">
+            <input
+              type="date"
+              id="lembrete-data"
+              class="form-control"
+              formControlName="data"
+            />
           </div>
           <div class="col-md-3">
             <label for="lembrete-hora" class="form-label">Hora</label>
-            <input type="time" id="lembrete-hora" class="form-control" formControlName="hora">
+            <input
+              type="time"
+              id="lembrete-hora"
+              class="form-control"
+              formControlName="hora"
+            />
           </div>
           <div class="col-auto">
-            <button type="submit" class="btn btn-success" [disabled]="lembreteForm.invalid">Adicionar</button>
+            <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="lembreteForm.invalid"
+            >
+              Adicionar
+            </button>
           </div>
         </div>
       </form>
@@ -55,15 +91,60 @@
         <tbody>
           <tr *ngFor="let lembrete of lembretes">
             <td>{{ lembrete.descricao }}</td>
-            <td>{{ lembrete.data | date:'dd/MM/yyyy' }}</td>
+            <td>{{ lembrete.data | date : "dd/MM/yyyy" }}</td>
             <td>{{ lembrete.hora }}</td>
-            <td><span class="badge bg-info text-dark">{{ lembrete.status }}</span></td>
+
+            <td>
+              <span
+                *ngIf="editandoLembreteStatusId !== lembrete.id"
+                (click)="iniciarEdicaoStatus(lembrete)"
+                class="badge bg-info text-dark"
+                style="cursor: pointer"
+                title="Clique para editar"
+              >
+                {{ lembrete.status }}
+              </span>
+
+              <select
+                *ngIf="editandoLembreteStatusId === lembrete.id"
+                class="form-select form-select-sm"
+                (change)="salvarStatusLembrete(lembrete, $event)"
+                (blur)="cancelarEdicaoStatus()"
+              >
+                <option
+                  [selected]="lembrete.status === 'PENDENTE'"
+                  value="PENDENTE"
+                >
+                  Pendente
+                </option>
+                <option
+                  [selected]="lembrete.status === 'CONCLUIDO'"
+                  value="CONCLUIDO"
+                >
+                  Concluído
+                </option>
+                <option
+                  [selected]="lembrete.status === 'CANCELADO'"
+                  value="CANCELADO"
+                >
+                  Cancelado
+                </option>
+              </select>
+            </td>
+
             <td class="text-center">
-              <button class="btn btn-sm btn-outline-danger" (click)="excluirLembrete(lembrete.id)">Excluir</button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="excluirLembrete(lembrete.id)"
+              >
+                Excluir
+              </button>
             </td>
           </tr>
           <tr *ngIf="lembretes.length === 0">
-            <td colspan="5" class="text-center text-muted">Nenhum lembrete para este pedido.</td>
+            <td colspan="5" class="text-center text-muted">
+              Nenhum lembrete para este pedido.
+            </td>
           </tr>
         </tbody>
       </table>
@@ -86,17 +167,29 @@
         </thead>
         <tbody>
           <tr *ngFor="let pagamento of pagamentos">
-            <td>{{ pagamento.valor | currency:'BRL' }}</td>
-            <td>{{ pagamento.data_vencimento | date:'dd/MM/yyyy' }}</td>
-            <td>{{ pagamento.data_pagamento ? (pagamento.data_pagamento | date:'dd/MM/yyyy') : 'Pendente' }}</td>
+            <td>{{ pagamento.valor | currency : "BRL" }}</td>
+            <td>{{ pagamento.data_vencimento | date : "dd/MM/yyyy" }}</td>
+            <td>
+              {{
+                pagamento.data_pagamento
+                  ? (pagamento.data_pagamento | date : "dd/MM/yyyy")
+                  : "Pendente"
+              }}
+            </td>
             <td class="text-center">
-              <button *ngIf="!pagamento.data_pagamento" class="btn btn-sm btn-success" (click)="registrarPagamento(pagamento.id)">
+              <button
+                *ngIf="!pagamento.data_pagamento"
+                class="btn btn-sm btn-success"
+                (click)="registrarPagamento(pagamento.id)"
+              >
                 Registrar Pagamento
               </button>
             </td>
           </tr>
           <tr *ngIf="pagamentos.length === 0">
-            <td colspan="4" class="text-center text-muted">Nenhum pagamento registrado para este pedido.</td>
+            <td colspan="4" class="text-center text-muted">
+              Nenhum pagamento registrado para este pedido.
+            </td>
           </tr>
         </tbody>
       </table>

@@ -8,12 +8,16 @@ import { Lembrete } from '../models/lembrete';
 })
 export class LembreteService {
 
-  private apiUrl = 'http://localhost:8080/lembretes';
+  private apiUrl = 'https://costureiraplus.onrender.com/lembretes';
 
   constructor(private http: HttpClient) { }
 
   salvar(lembrete: Lembrete): Observable<Lembrete> {
-    return this.http.post<Lembrete>(this.apiUrl, lembrete);
+    if (lembrete.id) {
+      return this.http.put<Lembrete>(`${this.apiUrl}/${lembrete.id}`, lembrete);
+    } else {
+      return this.http.post<Lembrete>(this.apiUrl, lembrete);
+    }
   }
 
   excluir(id: number): Observable<void> {

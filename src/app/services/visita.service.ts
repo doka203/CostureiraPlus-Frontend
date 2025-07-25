@@ -8,7 +8,7 @@ import { Visita } from '../models/visita';
 })
 export class VisitaService {
 
-  private apiUrl = 'http://localhost:8080/visitas';
+  private apiUrl = 'https://costureiraplus.onrender.com/visitas';
 
   constructor(private http: HttpClient) { }
 

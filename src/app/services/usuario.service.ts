@@ -8,7 +8,7 @@ import { Usuario } from '../models/usuario';
 })
 export class UsuarioService {
 
-  private apiUrl = 'http://localhost:8080/usuarios';
+  private apiUrl = 'https://costureiraplus.onrender.com/usuarios';
 
   constructor(private http: HttpClient) { }
 

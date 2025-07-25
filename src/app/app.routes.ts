@@ -15,6 +15,10 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
 import { authGuard } from './core/auth.guard';
 import { loginGuard } from './core/login.guard';
 
+export const appSettings = {
+  apiBaseUrl: 'https://costureiraplus.onrender.com'
+};
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
