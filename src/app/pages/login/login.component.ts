@@ -30,7 +30,7 @@ export class LoginComponent {
       this.loginService.autenticar(this.loginForm.value).subscribe({
         next: () => {
           // Navega para a página de consulta após o login
-          this.router.navigate(['/consultar']);
+          this.router.navigate(['/home']);
         },
         error: (err) => {
           alert('Login ou senha inválidos.');
