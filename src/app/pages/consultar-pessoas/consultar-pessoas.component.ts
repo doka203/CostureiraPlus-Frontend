@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { PessoaService } from '../../services/pessoa.service';
 import { Pessoa } from '../../models/pessoa';
 import { Router, RouterModule } from '@angular/router';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'app-consultar-pessoas',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgxMaskPipe],
   templateUrl: './consultar-pessoas.component.html',
   styleUrls: ['./consultar-pessoas.component.css']
 })
