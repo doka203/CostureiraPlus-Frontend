@@ -1,61 +1,72 @@
 <div class="container mt-4">
-  <h2>{{ formulario.get('id')?.value ? 'Editar Pedido' : 'Cadastrar Pedido' }}</h2>
-  <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title mb-4">{{ formulario.get('id')?.value ? 'Editar Pedido' : 'Cadastrar Pedido' }}</h2>
+          <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
 
-    <div class="mb-3">
-      <label for="cliente" class="form-label">Cliente:</label>
-      <select id="cliente" class="form-select" formControlName="idUsuarioCliente">
-        <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nome }}</option>
-      </select>
+            <div class="mb-3">
+              <label for="cliente" class="form-label">Cliente</label>
+              <select id="cliente" class="form-select" formControlName="idUsuarioCliente">
+                <option [ngValue]="null" disabled>Selecione um cliente...</option>
+                <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nome }}</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="descricao" class="form-label">Descrição do Pedido</label>
+              <textarea id="descricao" class="form-control" formControlName="descricao" rows="3"></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="data_pedido" class="form-label">Data do Pedido</label>
+                <input type="date" id="data_pedido" class="form-control" formControlName="data_pedido">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="data_entrega" class="form-label">Data da Entrega</label>
+                <input type="date" id="data_entrega" class="form-control" formControlName="data_entrega">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="valor" class="form-label">Valor Total (R$)</label>
+                <input type="number" id="valor" class="form-control" formControlName="valor">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="numero_parcelas" class="form-label">Número de Parcelas</label>
+                <input type="number" id="numero_parcelas" class="form-control" formControlName="numero_parcelas">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
+                <select id="forma_pagamento" class="form-select" formControlName="forma_pagamento">
+                    <option value="DINHEIRO">Dinheiro</option>
+                    <option value="PIX">Pix</option>
+                    <option value="CARTAO">Cartão</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select id="status" class="form-select" formControlName="status">
+                    <option value="EM ANDAMENTO">Em Andamento</option>
+                    <option value="FINALIZADO">Finalizado</option>
+                    <option value="CANCELADO">Cancelado</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-secondary" routerLink="/consultar-pedidos">Cancelar</button>
+              <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div class="mb-3">
-      <label for="descricao" class="form-label">Descrição:</label>
-      <input type="text" id="descricao" class="form-control" formControlName="descricao">
-    </div>
-
-    <div class="row mb-3">
-      <div class="col">
-        <label for="data_pedido" class="form-label">Data do Pedido:</label>
-        <input type="date" id="data_pedido" class="form-control" formControlName="data_pedido">
-      </div>
-      <div class="col">
-        <label for="data_entrega" class="form-label">Data da Entrega:</label>
-        <input type="date" id="data_entrega" class="form-control" formControlName="data_entrega">
-      </div>
-    </div>
-
-    <div class="row mb-3">
-       <div class="col">
-        <label for="valor" class="form-label">Valor (R$):</label>
-        <input type="number" id="valor" class="form-control" formControlName="valor">
-      </div>
-       <div class="col">
-        <label for="numero_parcelas" class="form-label">Nº de Parcelas:</label>
-        <input type="number" id="numero_parcelas" class="form-control" formControlName="numero_parcelas">
-      </div>
-    </div>
-
-     <div class="row mb-3">
-      <div class="col">
-        <label for="forma_pagamento" class="form-label">Forma de Pagamento:</label>
-        <select id="forma_pagamento" class="form-select" formControlName="forma_pagamento">
-            <option value="DINHEIRO">Dinheiro</option>
-            <option value="PIX">Pix</option>
-            <option value="CARTAO">Cartão</option>
-        </select>
-      </div>
-      <div class="col">
-        <label for="status" class="form-label">Status:</label>
-        <select id="status" class="form-select" formControlName="status">
-            <option value="EM ANDAMENTO">Em Andamento</option>
-            <option value="FINALIZADO">Finalizado</option>
-            <option value="CANCELADO">Cancelado</option>
-        </select>
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid">Salvar</button>
-    <button type="button" class="btn btn-secondary ms-2" routerLink="/consultar-pedidos">Cancelar</button>
-  </form>
+  </div>
 </div>

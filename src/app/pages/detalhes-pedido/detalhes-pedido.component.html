@@ -1,139 +1,105 @@
 <div class="container mt-4" *ngIf="pedido">
-  <h2>Detalhes do Pedido: {{ pedido.descricao }}</h2>
-  <hr />
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Detalhes do Pedido</h2>
+    <button class="btn btn-secondary" routerLink="/consultar-pedidos">Voltar para a Lista</button>
+  </div>
 
-  <h4>Dados Gerais</h4>
-  <p><strong>Cliente:</strong> {{ pedido.nomeCliente }}</p>
-  <p><strong>Status:</strong> {{ pedido.status }}</p>
-  <p><strong>Valor Total:</strong> {{ pedido.valor | currency : "BRL" }}</p>
-  <p>
-    <strong>Data do Pedido:</strong>
-    {{ pedido.data_pedido | date : "dd/MM/yyyy" }}
-  </p>
-  <p>
-    <strong>Data da Entrega:</strong>
-    {{ pedido.data_entrega | date : "dd/MM/yyyy" }}
-  </p>
-
-  <h4 class="mt-4">Lembretes</h4>
-
-  <form
-    [formGroup]="lembreteForm"
-    (ngSubmit)="onSubmitLembrete()"
-    class="mb-4 p-3 border rounded"
-  >
-    <div class="row g-3 align-items-end">
-      <div class="col-md-4">
-        <label for="lembrete-descricao" class="form-label">Descrição</label>
-        <input
-          type="text"
-          id="lembrete-descricao"
-          class="form-control"
-          formControlName="descricao"
-        />
-      </div>
-      <div class="col-md-3">
-        <label for="lembrete-data" class="form-label">Data</label>
-        <input
-          type="date"
-          id="lembrete-data"
-          class="form-control"
-          formControlName="data"
-        />
-      </div>
-      <div class="col-md-3">
-        <label for="lembrete-hora" class="form-label">Hora</label>
-        <input
-          type="time"
-          id="lembrete-hora"
-          class="form-control"
-          formControlName="hora"
-        />
-      </div>
-      <div class="col-auto">
-        <button
-          type="submit"
-          class="btn btn-success"
-          [disabled]="lembreteForm.invalid"
-        >
-          Adicionar
-        </button>
-      </div>
+  <div class="card shadow-sm mb-4">
+    <div class="card-header">
+      <h4>Dados Gerais</h4>
     </div>
-  </form>
-  <table class="table table-sm table-striped">
-    <thead class="table-light">
-      <tr>
-        <th>Descrição</th>
-        <th>Data</th>
-        <th>Hora</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let lembrete of lembretes">
-        <td>{{ lembrete.descricao }}</td>
-        <td>{{ lembrete.data | date : "dd/MM/yyyy" }}</td>
-        <td>{{ lembrete.hora }}</td>
-        <td>{{ lembrete.status }}</td>
-        <td>
-          <button
-            class="btn btn-sm btn-outline-danger"
-            (click)="excluirLembrete(lembrete.id)"
-          >
-            Excluir
-          </button>
-        </td>
-      </tr>
-      <tr *ngIf="lembretes.length === 0">
-        <td colspan="5" class="text-center">
-          Nenhum lembrete para este pedido.
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="card-body">
+      <p><strong>Cliente:</strong> {{ pedido.nomeCliente }}</p>
+      <p><strong>Descrição:</strong> {{ pedido.descricao }}</p>
+      <p><strong>Status:</strong> <span class="badge bg-primary">{{ pedido.status }}</span></p>
+      <p><strong>Valor Total:</strong> {{ pedido.valor | currency:'BRL' }}</p>
+      <p><strong>Data do Pedido:</strong> {{ pedido.data_pedido | date:'dd/MM/yyyy' }}</p>
+      <p><strong>Data da Entrega:</strong> {{ pedido.data_entrega | date:'dd/MM/yyyy' }}</p>
+    </div>
+  </div>
 
-  <h4 class="mt-4">Pagamentos</h4>
-  <table class="table table-sm table-striped">
-    <thead class="table-light">
-      <tr>
-        <th>Valor da Parcela</th>
-        <th>Data de Vencimento</th>
-        <th>Data de Pagamento</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let pagamento of pagamentos">
-        <td>{{ pagamento.valor | currency : "BRL" }}</td>
-        <td>{{ pagamento.data_vencimento | date : "dd/MM/yyyy" }}</td>
-        <td>
-          {{
-            pagamento.data_pagamento
-              ? (pagamento.data_pagamento | date : "dd/MM/yyyy")
-              : "Pendente"
-          }}
-        </td>
-        <td>
-          <button
-            *ngIf="!pagamento.data_pagamento"
-            class="btn btn-sm btn-success"
-            (click)="registrarPagamento(pagamento.id)"
-          >
-            Registar Pagamento
-          </button>
-        </td>
-      </tr>
-      <tr *ngIf="pagamentos.length === 0">
-        <td colspan="4" class="text-center">
-          Nenhum pagamento registado para este pedido.
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="card shadow-sm mb-4">
+    <div class="card-header">
+      <h4>Lembretes</h4>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="lembreteForm" (ngSubmit)="onSubmitLembrete()" class="mb-4 p-3 bg-light border rounded">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label for="lembrete-descricao" class="form-label">Descrição</label>
+            <input type="text" id="lembrete-descricao" class="form-control" formControlName="descricao">
+          </div>
+          <div class="col-md-3">
+            <label for="lembrete-data" class="form-label">Data</label>
+            <input type="date" id="lembrete-data" class="form-control" formControlName="data">
+          </div>
+          <div class="col-md-3">
+            <label for="lembrete-hora" class="form-label">Hora</label>
+            <input type="time" id="lembrete-hora" class="form-control" formControlName="hora">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-success" [disabled]="lembreteForm.invalid">Adicionar</button>
+          </div>
+        </div>
+      </form>
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Descrição</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Status</th>
+            <th class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lembrete of lembretes">
+            <td>{{ lembrete.descricao }}</td>
+            <td>{{ lembrete.data | date:'dd/MM/yyyy' }}</td>
+            <td>{{ lembrete.hora }}</td>
+            <td><span class="badge bg-info text-dark">{{ lembrete.status }}</span></td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-danger" (click)="excluirLembrete(lembrete.id)">Excluir</button>
+            </td>
+          </tr>
+          <tr *ngIf="lembretes.length === 0">
+            <td colspan="5" class="text-center text-muted">Nenhum lembrete para este pedido.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-  <button class="btn btn-secondary mt-3" routerLink="/consultar-pedidos">
-    Voltar para a Lista
-  </button>
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h4>Pagamentos</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Valor da Parcela</th>
+            <th>Data de Vencimento</th>
+            <th>Data de Pagamento</th>
+            <th class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pagamento of pagamentos">
+            <td>{{ pagamento.valor | currency:'BRL' }}</td>
+            <td>{{ pagamento.data_vencimento | date:'dd/MM/yyyy' }}</td>
+            <td>{{ pagamento.data_pagamento ? (pagamento.data_pagamento | date:'dd/MM/yyyy') : 'Pendente' }}</td>
+            <td class="text-center">
+              <button *ngIf="!pagamento.data_pagamento" class="btn btn-sm btn-success" (click)="registrarPagamento(pagamento.id)">
+                Registrar Pagamento
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="pagamentos.length === 0">
+            <td colspan="4" class="text-center text-muted">Nenhum pagamento registrado para este pedido.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
