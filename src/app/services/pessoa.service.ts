@@ -12,8 +12,8 @@ export class PessoaService {
 
   constructor(private http: HttpClient) { }
 
-  listar(): Observable<Pessoa[]> {
-    return this.http.get<Pessoa[]>(this.apiUrl);
+  listarMeusClientes(): Observable<Pessoa[]> {
+    return this.http.get<Pessoa[]>(`${this.apiUrl}/meus-clientes`);
   }
 
   buscarPorId(id: number): Observable<Pessoa> {

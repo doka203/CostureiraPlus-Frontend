@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
+
 import { Login } from '../models/login';
 import { Token } from '../models/token';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-
   private readonly apiUrl = 'http://localhost:8080/auth/login';
   private readonly TOKEN_KEY = 'authToken';
 
@@ -22,7 +22,7 @@ export class LoginService {
     );
   }
 
-  private salvarToken(token: string): void {
+  salvarToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
 
@@ -34,12 +34,25 @@ export class LoginService {
     localStorage.removeItem(this.TOKEN_KEY);
   }
 
+  logout(): void {
+    this.limparToken();
+    this.router.navigate(['/login']);
+  }
+
   isLoggedIn(): boolean {
     return !!this.obterToken();
   }
 
-  logout(): void {
-    this.limparToken();
-    this.router.navigate(['/login']);
+  extrairDadosToken(): any | null {
+    const token = this.obterToken();
+    if (!token) {
+      return null;
+    }
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error("Token inválido:", error);
+      return null;
+    }
   }
 }

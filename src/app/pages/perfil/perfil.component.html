@@ -1,0 +1,15 @@
+<div class="container mt-4">
+  <h2>Meu Perfil</h2>
+
+  <div *ngIf="perfil" class="card shadow-sm mt-4">
+    <div class="card-header">
+      <h4>Informações da Conta</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Nome:</strong> {{ perfil.nome }}</p>
+      <p><strong>Login:</strong> {{ perfil.login }}</p>
+      <p><strong>CPF:</strong> {{ perfil.cpf }}</p>
+      <p><strong>Tipo de Conta:</strong> {{ perfil.tipo }}</p>
+    </div>
+  </div>
+</div>

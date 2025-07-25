@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { NgxMaskPipe } from 'ngx-mask';
 import { PessoaService } from '../../services/pessoa.service';
 import { Pessoa } from '../../models/pessoa';
-import { Router, RouterModule } from '@angular/router';
-import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'app-consultar-pessoas',
@@ -13,16 +13,20 @@ import { NgxMaskPipe } from 'ngx-mask';
   styleUrls: ['./consultar-pessoas.component.css']
 })
 export class ConsultarPessoasComponent implements OnInit {
+
   pessoas: Pessoa[] = [];
 
-  constructor(private pessoaService: PessoaService, private router: Router) { }
+  constructor(
+    private pessoaService: PessoaService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.carregarPessoas();
   }
 
   carregarPessoas(): void {
-    this.pessoaService.listar().subscribe(pessoas => {
+    this.pessoaService.listarMeusClientes().subscribe(pessoas => {
       this.pessoas = pessoas;
     });
   }
@@ -33,9 +37,12 @@ export class ConsultarPessoasComponent implements OnInit {
 
   excluirPessoa(id: number): void {
     if (confirm('Tem certeza que deseja excluir esta pessoa?')) {
-      this.pessoaService.excluir(id).subscribe(() => {
-        alert('Pessoa excluída com sucesso!');
-        this.carregarPessoas();
+      this.pessoaService.excluir(id).subscribe({
+         next: () => {
+            alert('Cliente excluído com sucesso!');
+            this.carregarPessoas();
+         },
+         error: (err) => alert('Erro ao excluir cliente.')
       });
     }
   }

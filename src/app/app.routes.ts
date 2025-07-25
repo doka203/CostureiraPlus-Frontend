@@ -9,6 +9,7 @@ import { CadastrarPedidoComponent } from './pages/cadastrar-pedido/cadastrar-ped
 import { DetalhesPedidoComponent } from './pages/detalhes-pedido/detalhes-pedido.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
 import { RelatoriosComponent } from './pages/relatorios/relatorios.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 // Importação dos guardiões de rota
 import { authGuard } from './core/auth.guard';
@@ -34,5 +35,6 @@ export const routes: Routes = [
 
   // Outras rotas
   { path: 'agenda', component: AgendaComponent, canActivate: [authGuard] },
-  { path: 'relatorios', component: RelatoriosComponent, canActivate: [authGuard] }
+  { path: 'relatorios', component: RelatoriosComponent, canActivate: [authGuard] },
+  { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] }
 ];
