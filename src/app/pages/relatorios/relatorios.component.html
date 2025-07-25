@@ -1,0 +1,46 @@
+<div class="container mt-4">
+  <h2>Relatórios e Métricas</h2>
+  <hr>
+
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-header">Relatório de Clientes</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ totalClientes }}</h5>
+          <p class="card-text">Total de Clientes Cadastrados</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center h-100">
+        <div class="card-header">Relatório de Pedidos</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ totalPedidos }}</h5>
+          <p class="card-text">Total de Pedidos Realizados</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-white bg-success text-center h-100">
+        <div class="card-header">Relatório Financeiro</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ valorTotalRecebido | currency:'BRL' }}</h5>
+          <p class="card-text">Valor Total Recebido (Pedidos Finalizados)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-white bg-warning text-center h-100">
+        <div class="card-header">Relatório Financeiro</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ valorTotalReceber | currency:'BRL' }}</h5>
+          <p class="card-text">Valor a Receber (Pedidos em Andamento)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

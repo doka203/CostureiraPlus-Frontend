@@ -8,6 +8,7 @@ import { CadastrarPedidoComponent } from './pages/cadastrar-pedido/cadastrar-ped
 import { DetalhesPedidoComponent } from './pages/detalhes-pedido/detalhes-pedido.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
+import { RelatoriosComponent } from './pages/relatorios/relatorios.component';
 import { authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
@@ -28,4 +29,5 @@ export const routes: Routes = [
   { path: 'detalhes-pedido/:id', component: DetalhesPedidoComponent, canActivate: [authGuard] },
 
    { path: 'agenda', component: AgendaComponent, canActivate: [authGuard] },
+    { path: 'relatorios', component: RelatoriosComponent, canActivate: [authGuard] }
 ];
