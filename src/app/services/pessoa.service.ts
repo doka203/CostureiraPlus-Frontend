@@ -24,7 +24,7 @@ export class PessoaService {
     if (pessoa.id) {
       return this.http.put<Pessoa>(`${this.apiUrl}/${pessoa.id}`, pessoa);
     } else {
-      return this.http.post<Pessoa>(this.apiUrl, pessoa);
+      return this.http.post<Pessoa>(`${this.apiUrl}/meus-clientes`, pessoa);
     }
   }
 

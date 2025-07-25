@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { NgxMaskPipe } from 'ngx-mask';
 import { PessoaService } from '../../services/pessoa.service';
 import { Pessoa } from '../../models/pessoa';
@@ -19,7 +20,15 @@ export class ConsultarPessoasComponent implements OnInit {
   constructor(
     private pessoaService: PessoaService,
     private router: Router
-  ) { }
+  ) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      if (event.urlAfterRedirects === '/consultar') {
+        this.carregarPessoas();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.carregarPessoas();
